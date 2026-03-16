@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nd2-export"
+version = "0.1.0"
+description = "Streaming ND2 to TIFF export tools for large microscopy datasets."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "nd2>=0.10",
+    "numpy>=1.24",
+    "tifffile>=2024.8.30",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pyinstaller>=6.0",
+]
+
+[project.scripts]
+nd2-export = "nd2_export.cli:main"
+nd2-export-gui = "nd2_export.gui:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
