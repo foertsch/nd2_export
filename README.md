@@ -14,11 +14,7 @@ The exporter is implemented as a Python CLI that wraps `nd2`'s TIFF writer for l
 - `export`: convert one ND2 file to OME-TIFF
 - `batch`: convert every ND2 file in a folder into an `export/` subfolder
 
-The first export was validated against:
-
-- `path/to/sample.nd2`
-
-It produced a 2.2 GB OME-TIFF with:
+The first export was validated on a real 2-channel widefield acquisition. It produced a 2.2 GB OME-TIFF with:
 
 - shape `CYX = (2, 24240, 24240)`
 - dtype `uint16`
@@ -73,6 +69,30 @@ If you run `batch` without an argument, a folder picker opens and the exporter c
 We do not commit `.nd2` binaries to the repository by default.
 
 If you want a manual end-to-end test during development, place a small local ND2 file in `tests/data/` and follow the instructions in [`tests/data/README.md`](tests/data/README.md).
+
+## Docker
+
+A CLI-only container image is defined in [`Dockerfile`](Dockerfile). It builds the package in a multi-stage build and runs `nd2-export` as its entrypoint. The GUI is not included in the image because it depends on tkinter; use the GUI paths below for desktop use.
+
+Build:
+
+```bash
+docker build -t nd2-export:latest .
+```
+
+Inspect a file (mount the folder that contains your ND2 at `/data`):
+
+```bash
+docker run --rm -v "$PWD:/data" nd2-export:latest inspect sample.nd2
+```
+
+Batch-export a folder:
+
+```bash
+docker run --rm -v "$PWD:/data" nd2-export:latest batch . --progress
+```
+
+The container writes outputs into the mounted folder exactly as the local CLI does, so the same `export/` subfolder convention applies.
 
 ## Click-To-Run GUI
 
